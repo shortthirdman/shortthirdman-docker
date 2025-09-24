@@ -1,0 +1,23 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  image-build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4
+    - name: Build the JDK17 Docker image
+      run: docker build . --file Dockerfile-jdk17 --platform linux/amd64 --compress --rm -t shortthirdman/cosmos-ci:1.0-jdk17
+    - name: Build the JDK21 Docker image
+      run: docker build . --file Dockerfile-jdk21 --platform linux/amd64 --compress --rm -t shortthirdman/cosmos-ci:1.0-jdk21
